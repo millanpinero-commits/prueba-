@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-<!-- Chart.js v3.9.1 para total compatibilidad con los gráficos -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 <style>
   :root{
@@ -89,7 +88,7 @@
   h1.title em{ font-style:italic; color:var(--rose); }
   .bajada{
     margin-top:1.1rem;
-    max-width:46em;
+    max-width:48em;
     font-size:1.15rem;
     color:var(--ink-soft);
   }
@@ -111,9 +110,9 @@
   .kpi .lbl{ color:var(--ink-soft); font-size:0.92rem; margin-top:0.2rem; }
 
   section.block{ margin-top:3.4rem; }
-  .block h2{ font-size:1.5rem; max-width:30em; }
+  .block h2{ font-size:1.5rem; max-width:32em; }
   .block .q{ color:var(--rose); font-weight:500; font-family:'Inter',sans-serif; font-size:1rem; margin-bottom:0.5rem; display:block; }
-  .block p.insight{ margin-top:0.9rem; max-width:62ch; color:var(--ink-soft); font-size:1rem; }
+  .block p.insight{ margin-top:0.9rem; max-width:64ch; color:var(--ink-soft); font-size:1rem; }
   .block p.insight strong{ color:var(--ink); font-weight:600; }
 
   .chart-grid{
@@ -134,13 +133,84 @@
   .chart-wrap{ position:relative; height:300px; width:100%; margin-top:1rem; }
   .chart-wrap.tall{ height:340px; }
 
+  /* Sub-panel contexto internacional */
+  .international-box{
+    margin-top:1.25rem;
+    background:#F4F5F0;
+    border:1px dashed var(--line);
+    border-radius:var(--radius);
+    padding:1.2rem 1.4rem;
+  }
+  .international-box h4{
+    margin:0 0 0.4rem;
+    font-size:0.95rem;
+    color:var(--teal);
+    font-weight:600;
+  }
+  .international-box p{
+    margin:0;
+    font-size:0.9rem;
+    color:var(--ink-soft);
+  }
+  .stat-triad{
+    display:flex;
+    gap:1.5rem;
+    margin-top:0.8rem;
+    flex-wrap:wrap;
+  }
+  .stat-item{
+    background:var(--panel);
+    border:1px solid var(--line);
+    padding:0.6rem 1rem;
+    border-radius:8px;
+    flex:1 1 120px;
+  }
+  .stat-item .val{ font-size:1.3rem; font-family:'Fraunces', serif; font-weight:600; color:var(--rose); }
+  .stat-item .tag{ font-size:0.8rem; color:var(--ink-soft); }
+
+  /* Cuadro comparativo Hijos vs Mascotas */
+  .compare-grid{
+    margin-top:1.4rem;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
+    gap:1.25rem;
+  }
+  .compare-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:1.5rem;
+  }
+  .compare-card h3{
+    font-size:1.15rem;
+    margin-bottom:0.8rem;
+    display:flex;
+    align-items:center;
+    gap:0.5rem;
+  }
+  .compare-card.mascota h3{ color:var(--teal); }
+  .compare-card.hijos h3{ color:var(--rose); }
+  .compare-card ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+  }
+  .compare-card li{
+    padding:0.6rem 0;
+    border-bottom:1px solid var(--line);
+    font-size:0.92rem;
+    color:var(--ink-soft);
+  }
+  .compare-card li:last-child{ border-bottom:none; }
+  .compare-card li strong{ color:var(--ink); }
+
   footer.note{
     margin-top:3.5rem;
     padding-top:1.5rem;
     border-top:1px solid var(--line);
     color:var(--ink-soft);
     font-size:0.85rem;
-    max-width:62ch;
+    max-width:64ch;
   }
 
   @media (max-width:640px){
@@ -166,12 +236,13 @@
   <div id="dashboard" hidden>
 
     <header class="hero">
-      <div class="kicker">Vínculo humano–mascota · natalidad en Argentina</div>
-      <h1 class="title">¿Puede una mascota <em>reemplazar</em> a un vínculo humano?</h1>
+      <div class="kicker">Vínculo humano–mascota · Demografía y afectos</div>
+      <h1 class="title">¿Sobrepoblación de mascotas y <em>caída demográfica</em>?</h1>
       <p class="bajada">
-        Cruzamos una encuesta sobre el rol afectivo de las mascotas, comentarios de YouTube en videos sobre animales
-        y estadísticas oficiales de nacimientos por provincia para explorar si el vínculo con una mascota compite,
-        complementa o reemplaza al vínculo humano — y si eso alcanza para explicar la caída de la natalidad.
+        ¿Avanzamos hacia un escenario donde los animales de compañía sustituyen la descendencia humana?
+        Cruzamos una encuesta local sobre el rol afectivo de las mascotas, comentarios en videos masivos y estadísticas oficiales
+        de natalidad en Argentina para explorar si el lazo humano-animal compite, complementa o reemplaza la paternidad en tiempos
+        de ajuste económico y búsqueda de autonomía personal.
       </p>
 
       <div class="kpi-strip" id="kpiStrip"></div>
@@ -193,6 +264,26 @@
           <div class="chart-wrap"><canvas id="chartReemplaza"></canvas></div>
         </div>
       </div>
+
+      <!-- Perspectiva de HumanePro -->
+      <div class="international-box">
+        <h4>El cambio de paradigma cultural (Perspectiva comparada: HumanePro / EE.UU.)</h4>
+        <p>A nivel internacional, los relevamientos demuestran que el animal doméstico dejó de ser percibido como un bien transaccional y pasó al orden del parentesco:</p>
+        <div class="stat-triad">
+          <div class="stat-item">
+            <div class="val">Mayoría</div>
+            <div class="tag">Considerados miembro de la familia</div>
+          </div>
+          <div class="stat-item">
+            <div class="val">Creciente</div>
+            <div class="tag">Considerados compañeros de vida</div>
+          </div>
+          <div class="stat-item">
+            <div class="val">Residual</div>
+            <div class="tag">Considerados mera "propiedad"</div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="block">
@@ -210,7 +301,7 @@
 
     <section class="block">
       <span class="q">Pregunta 3</span>
-      <h2>¿Estos elementos pueden ser causa de la baja natalidad, por ejemplo en Argentina?</h2>
+      <h2>¿Estos elementos pueden ser causa de la baja natalidad en Argentina?</h2>
       <p class="insight" id="insight3"></p>
       <div class="chart-grid single">
         <div class="panel">
@@ -221,10 +312,35 @@
       </div>
     </section>
 
+    <!-- Discusión material: Costo y libertad personal -->
+    <section class="block">
+      <span class="q">Discusión cualitativa</span>
+      <h2>Crianza vs. Tenencia: La ecuación entre economía y autonomía</h2>
+      <p class="insight">
+        Más allá de la afinidad afectiva, existen factores materiales que explican por qué la tenencia de animales crece mientras la maternidad y paternidad se posponen o descartan:
+      </p>
+      <div class="compare-grid">
+        <div class="compare-card mascota">
+          <h3>Vínculo con Mascota</h3>
+          <ul>
+            <li><strong>Costo económico:</strong> Inversión mensual acotada (alimentación y sanidad preventiva).</li>
+            <li><strong>Autonomía y tiempo:</strong> Permite mantener rutinas laborales flexibles y proyectos individuales.</li>
+            <li><strong>Compromiso:</strong> Cuidado de menor dependencia sin requerir reconfiguración de la carrera profesional.</li>
+          </ul>
+        </div>
+        <div class="compare-card hijos">
+          <h3>Crianza de Hijos</h3>
+          <ul>
+            <li><strong>Costo económico:</strong> Alta demanda presupuestaria sostenida (salud, educación, vivienda, vestimenta).</li>
+            <li><strong>Autonomía y tiempo:</strong> Demanda absoluta y pérdida de libertad personal inmediata, especialmente en los primeros años.</li>
+            <li><strong>Compromiso:</strong> Responsabilidad legal y social a largo plazo que condiciona el estilo de vida familiar.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
     <footer class="note">
-      Nota metodológica: la encuesta, los comentarios de YouTube y las estadísticas de nacimientos provienen de
-      fuentes y poblaciones independientes entre sí — no hay un vínculo a nivel de persona entre ellas. Este panel
-      permite observar patrones y coincidencias temporales, pero no establece relaciones de causalidad.
+      Nota metodológica: Encuesta propia, análisis textual de comentarios en YouTube, datos de natalidad del Registro Civil/Ministerio de Salud e indicadores conceptuales de HumanePro (Pets by the Numbers). Los datos permiten mapear una transformación en las prioridades afectivas y socioeconómicas contemporáneas, sin asumir causalidades lineales directas.
     </footer>
 
   </div>
@@ -304,7 +420,6 @@ async function init(){
       fetchSheet(GID.comentarios)
     ]);
 
-    // Hacemos visible el dashboard ANTES de dibujar para que Chart.js pueda calcular el ancho y alto
     document.getElementById('loading').hidden = true;
     document.getElementById('error').hidden = true;
     document.getElementById('dashboard').hidden = false;
@@ -389,30 +504,25 @@ function render(encuesta, nacimientos, comentarios){
 
   // ---------- insights ----------
   document.getElementById('insight1').innerHTML =
-    `Sobre <strong>${creesTotal}</strong> respuestas, un <strong>${pctCreesSi}%</strong> cree que una mascota sí puede
-    ocupar el lugar emocional de un vínculo humano o familiar. Sin embargo, al preguntar por su caso personal,
-    <strong>${pctComplementa}%</strong> dice que la mascota <strong>complementa</strong> sus vínculos con otras
-    personas, no que los reemplaza. La lectura de la encuesta es que el vínculo afectivo con la mascota es real y
-    profundo, pero mayormente se vive como un agregado a los vínculos humanos, no como su sustituto.`;
+    `Sobre <strong>${creesTotal}</strong> respuestas, un <strong>${pctCreesSi}%</strong> considera admisible que una mascota
+    llegue a ocupar el lugar emocional de un vínculo humano o familiar. Sin embargo, en el plano personal directo, el
+    <strong>${pctComplementa}%</strong> define el lazo como un <strong>complemento</strong> afectivo y no una sustitución. Al igual
+    que muestran los relevamientos globales, el animal deja de concebirse como un objeto de propiedad y asume estatus de afecto,
+    pero convive junto a la red de sociabilidad humana en vez de anularla.`;
 
   document.getElementById('insight2').innerHTML =
-    `De ${totalComentarios.toLocaleString('es-AR')} comentarios, <strong>${pctFamiliaOrHijo}%</strong> usa
-    vocabulario de parentesco ("familia", "hijo/a", "bebé") para referirse a una mascota, mientras que solo
-    <strong>${pctReemplazoDirecto}%</strong> usa expresiones explícitas de reemplazo o sustitución. Es decir: el
-    lenguaje familiar-afectivo aparece con fuerza y espontáneamente en el discurso público, pero como una forma de
-    nombrar el cariño más que como una declaración consciente de "reemplazo" de un vínculo humano.`;
+    `De ${totalComentarios.toLocaleString('es-AR')} comentarios, <strong>${pctFamiliaOrHijo}%</strong> apela a un
+    léxico parental directo ("familia", "hijo/a", "bebé"), mientras que solo un <strong>${pctReemplazoDirecto}%</strong> formula
+    un reemplazo programático. Las audiencias incorporan el vocabulario filial como un código espontáneo de devoción y cuidado,
+    reflejando la jerarquía emocional que adquirió el animal en la cotidianeidad.`;
 
   document.getElementById('insight3').innerHTML =
-    `Los nacimientos totales registrados pasaron de <strong>${firstVal.toLocaleString('es-AR')}</strong> en
+    `Los nacimientos totales registrados descendieron de <strong>${firstVal.toLocaleString('es-AR')}</strong> en
     ${firstYear} a <strong>${lastVal.toLocaleString('es-AR')}</strong> en ${lastYear}
-    (variación de <strong>${variacion}%</strong>). La caída es real y sostenida en el tiempo, y coincide con el
-    período en que crece la tenencia de mascotas y su lugar afectivo. Pero encuesta, comentarios y estadísticas de
-    natalidad son <strong>fuentes independientes</strong>, sin vínculo a nivel de persona: alcanza para decir que
-    ambos fenómenos son contemporáneos, no que la tenencia de mascotas sea causa de la baja natalidad — eso requeriría
-    estudios que sigan a las mismas personas en el tiempo y descarten otros factores (económicos, laborales,
-    culturales, de acceso a la vivienda, etc.).`;
+    (caída del <strong>${variacion}%</strong>). La curva coincide en el tiempo con la consolidación de los animales como miembros del hogar.
+    Sin embargo, la demografía responde a condicionantes materiales estructurales: mientras la crianza de un hijo exige una inversión económica prolongada y postergación de la autonomía individual, la mascota ofrece compañía afectiva inmediata con costos y ataduras sustancialmente menores.`;
 
-  // ---------- charts (gráficos originales restaurados) ----------
+  // ---------- charts ----------
   new Chart(document.getElementById('chartCrees'), {
     type: 'doughnut',
     data: {
