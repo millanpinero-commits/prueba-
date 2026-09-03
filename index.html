@@ -265,7 +265,6 @@
         </div>
       </div>
 
-      <!-- Perspectiva de HumanePro -->
       <div class="international-box">
         <h4>El cambio de paradigma cultural (Perspectiva comparada: HumanePro / EE.UU.)</h4>
         <p>A nivel internacional, los relevamientos demuestran que el animal doméstico dejó de ser percibido como un bien transaccional y pasó al orden del parentesco:</p>
@@ -292,7 +291,7 @@
       <p class="insight" id="insight2"></p>
       <div class="chart-grid single">
         <div class="panel">
-          <h3>Lenguaje afectivo-familiar en comentarios de YouTube</h3>
+          <h3>Lenguaje afectivo en comentarios de YouTube</h3>
           <div class="sub">% de comentarios que contienen cada tipo de expresión (un comentario puede pertenecer a más de una categoría)</div>
           <div class="chart-wrap"><canvas id="chartComentarios"></canvas></div>
         </div>
@@ -312,7 +311,6 @@
       </div>
     </section>
 
-    <!-- Discusión material: Costo y libertad personal -->
     <section class="block">
       <span class="q">Discusión cualitativa</span>
       <h2>Crianza vs. Tenencia: La ecuación entre economía y autonomía</h2>
@@ -453,32 +451,27 @@ function render(encuesta, nacimientos, comentarios){
   const complementaEntry = Object.entries(reemplazaCounts).find(([k]) => stripAccents(k).includes('complementa'));
   const pctComplementa = pct(complementaEntry ? complementaEntry[1] : 0, reemplazaTotal);
 
-  // ---------- comentarios ----------
+  // ---------- NUEVAS CATEGORÍAS DE COMENTARIOS (Emojis, modismos, asimilación y preferencia) ----------
   const textosValidos = comentarios.filter(r => (r.text || '').toString().trim().length > 0);
   const totalComentarios = textosValidos.length;
 
   const categorias = [
-    { label: 'Familia', terms: ['familia', 'familiar'] },
-    { label: 'Hijo/a · bebé', terms: ['hijo', 'hija', 'hijos', 'bebe', 'baby'] },
-    { label: 'Reemplaza / sustituye', terms: ['reemplaza', 'remplaza', 'sustituye', 'en vez de', 'en lugar de'] },
-    { label: 'Amor · corazón · vida', terms: ['amor', 'corazon', 'mi vida'] },
-    { label: 'Único / todo para mí', terms: ['unico', 'unica', 'mi todo', 'todo mi mundo'] }
+    { label: 'Afecto coloquial / Emojis (amor, gordo, ❤️)', terms: ['amor', 'corazon', 'vida', 'gordo', 'gorda', 'hermoso', 'hermosa', 'lindo', 'linda', 'precioso', 'cosita', 'chiquito', 'bebe', 'bebé', '❤', '❤️', '😍', '🥰', '🥺'] },
+    { label: 'Asimilación parental (hijo/a, perrhijo, familia)', terms: ['hijo', 'hija', 'perrhijo', 'gathijo', 'mama', 'mamá', 'papa', 'papá', 'sobrino', 'nieto', 'hermano', 'familia', 'familiar', 'nene', 'nena'] },
+    { label: 'Preferencia moral / Reemplazo', terms: ['reemplaza', 'sustituye', 'en vez de', 'en lugar de', 'mejor que', 'prefiero a los animales', 'no traicionan'] }
   ];
+  
   const catCounts = categorias.map(cat => {
     const count = textosValidos.filter(r => {
-      const t = stripAccents(r.text);
-      return cat.terms.some(term => t.includes(term));
+      const t = stripAccents(r.text); // Aclaración: stripAccents elimina tildes, pero no borra emojis
+      return cat.terms.some(term => t.includes(stripAccents(term)) || r.text.includes(term)); 
     }).length;
     return { label: cat.label, count, pct: pct(count, totalComentarios) };
   });
-  const pctFamiliaOrHijo = pct(
-    textosValidos.filter(r => {
-      const t = stripAccents(r.text);
-      return ['familia','familiar','hijo','hija','hijos','bebe'].some(term => t.includes(term));
-    }).length,
-    totalComentarios
-  );
-  const pctReemplazoDirecto = catCounts.find(c => c.label.startsWith('Reemplaza')).pct;
+
+  const pctAfecto = catCounts.find(c => c.label.startsWith('Afecto')).pct;
+  const pctParental = catCounts.find(c => c.label.startsWith('Asimilación')).pct;
+  const pctPreferencia = catCounts.find(c => c.label.startsWith('Preferencia')).pct;
 
   // ---------- nacimientos ----------
   const porAnio = {};
@@ -511,10 +504,7 @@ function render(encuesta, nacimientos, comentarios){
     pero convive junto a la red de sociabilidad humana en vez de anularla.`;
 
   document.getElementById('insight2').innerHTML =
-    `De ${totalComentarios.toLocaleString('es-AR')} comentarios, <strong>${pctFamiliaOrHijo}%</strong> apela a un
-    léxico parental directo ("familia", "hijo/a", "bebé"), mientras que solo un <strong>${pctReemplazoDirecto}%</strong> formula
-    un reemplazo programático. Las audiencias incorporan el vocabulario filial como un código espontáneo de devoción y cuidado,
-    reflejando la jerarquía emocional que adquirió el animal en la cotidianeidad.`;
+    `Metodológicamente, buscar solo términos formales subestima el fenómeno. Al ampliar la métrica, vemos que el <strong>${pctAfecto}%</strong> de las interacciones utilizan expresiones coloquiales de apego ("gordo/a", "cosita") y emojis (❤️, 😍), codificando el afecto en el ecosistema digital. Un <strong>${pctParental}%</strong> avanza explícitamente hacia un léxico de asimilación parental ("hijo/a", "perrhijo"), mientras que apenas un <strong>${pctPreferencia}%</strong> plantea un reemplazo moral o preferencia directa sobre el humano ("mejor que las personas"). El animal ocupa un lugar de extrema jerarquía emocional, pero el discurso se articula desde la devoción cotidiana más que desde la sustitución de la especie.`;
 
   document.getElementById('insight3').innerHTML =
     `Los nacimientos totales registrados descendieron de <strong>${firstVal.toLocaleString('es-AR')}</strong> en
