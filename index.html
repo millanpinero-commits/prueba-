@@ -36,11 +36,8 @@
   h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; margin:0; }
   a{ color:var(--teal); }
 
-  [hidden] {
-    display: none !important;
-  }
+  [hidden] { display: none !important; }
 
-  /* ---------- loading / error states ---------- */
   #loading, #error{
     min-height:100vh;
     display:flex;
@@ -74,7 +71,6 @@
   }
   #retryBtn:hover{ background:#245853; }
 
-  /* ---------- layout ---------- */
   #dashboard{ max-width:1180px; margin:0 auto; padding:3.5rem 1.75rem 5rem; }
 
   header.hero{ margin-bottom:2.75rem; }
@@ -133,7 +129,6 @@
   .chart-wrap{ position:relative; height:300px; width:100%; margin-top:1rem; }
   .chart-wrap.tall{ height:340px; }
 
-  /* Sub-panel contexto internacional */
   .international-box{
     margin-top:1.25rem;
     background:#F4F5F0;
@@ -147,17 +142,8 @@
     color:var(--teal);
     font-weight:600;
   }
-  .international-box p{
-    margin:0;
-    font-size:0.9rem;
-    color:var(--ink-soft);
-  }
-  .stat-triad{
-    display:flex;
-    gap:1.5rem;
-    margin-top:0.8rem;
-    flex-wrap:wrap;
-  }
+  .international-box p{ margin:0; font-size:0.9rem; color:var(--ink-soft); }
+  .stat-triad{ display:flex; gap:1.5rem; margin-top:0.8rem; flex-wrap:wrap; }
   .stat-item{
     background:var(--panel);
     border:1px solid var(--line);
@@ -168,15 +154,66 @@
   .stat-item .val{ font-size:1.3rem; font-family:'Fraunces', serif; font-weight:600; color:var(--rose); }
   .stat-item .tag{ font-size:0.8rem; color:var(--ink-soft); }
 
-  /* Tarjetas para comentarios (Reemplazo del gráfico de barras) */
-  .stat-cards-wrap { display:flex; gap:1.25rem; margin-top:1.5rem; flex-wrap:wrap; }
-  .stat-card-big { background:#F4F5F0; border:1px solid var(--line); border-radius:12px; padding:1.5rem; flex:1 1 200px; text-align:center; }
-  .stat-card-big .pct { font-size:2.8rem; font-family:'Fraunces', serif; font-weight:600; color:var(--teal); line-height:1; }
-  .stat-card-big:nth-child(2) .pct { color:var(--rose); }
-  .stat-card-big:nth-child(3) .pct { color:var(--gold); }
-  .stat-card-big .lbl { font-size:0.95rem; color:var(--ink); font-weight:500; margin-top:0.5rem; }
+  /* Burbujas Creadas Dinámicamente */
+  .comment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .comment-bubble {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  }
+  .comment-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 24px;
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: var(--panel) transparent transparent transparent;
+    display: block;
+    width: 0;
+  }
+  .comment-bubble::before {
+    content: '';
+    position: absolute;
+    bottom: -11px;
+    left: 23px;
+    border-width: 11px 11px 0;
+    border-style: solid;
+    border-color: var(--line) transparent transparent transparent;
+    display: block;
+    width: 0;
+  }
+  .comment-bubble .tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 0.6rem;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 0.9rem;
+  }
+  .tag-eco { background: var(--rose-soft); color: #7A3542; }
+  .tag-auto { background: var(--teal-soft); color: #194642; }
+  .tag-afecto { background: #FDE8B5; color: #8A6417; }
+  
+  .comment-bubble .quote {
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .comment-bubble .quote::before { content: '"'; color: var(--rose); font-weight: 700; font-family: 'Fraunces', serif; }
+  .comment-bubble .quote::after { content: '"'; color: var(--rose); font-weight: 700; font-family: 'Fraunces', serif; }
 
-  /* Cuadro comparativo Hijos vs Mascotas */
   .compare-grid{
     margin-top:1.4rem;
     display:grid;
@@ -198,11 +235,7 @@
   }
   .compare-card.mascota h3{ color:var(--teal); }
   .compare-card.hijos h3{ color:var(--rose); }
-  .compare-card ul{
-    list-style:none;
-    padding:0;
-    margin:0;
-  }
+  .compare-card ul{ list-style:none; padding:0; margin:0; }
   .compare-card li{
     padding:0.6rem 0;
     border-bottom:1px solid var(--line);
@@ -295,17 +328,14 @@
 
     <section class="block">
       <span class="q">Pregunta 2</span>
-      <h2>¿Los comentarios en videos de mascotas reflejan ese reemplazo afectivo-familiar?</h2>
-      <p class="insight" id="insight2"></p>
-      <div class="chart-grid single">
-        <div class="panel">
-          <h3>Lenguaje afectivo en comentarios de YouTube</h3>
-          <div class="sub">% sobre el total de comentarios (un mismo texto puede contener múltiples expresiones)</div>
-          <div class="stat-cards-wrap" id="comentariosCards">
-            <!-- Se llenará con JavaScript -->
-          </div>
-        </div>
-      </div>
+      <h2>¿Cómo relatan las audiencias su vínculo diario con las mascotas?</h2>
+      <p class="insight">
+        Al analizar cualitativamente el discurso orgánico en redes, notamos que el fenómeno no opera como una competencia directa con la especie humana. El animal aparece como una respuesta afectiva a las tensiones materiales contemporáneas: el alto costo de vida, la necesidad de preservar la autonomía personal y la búsqueda de un espacio de contención inmediato.
+      </p>
+      
+      <!-- Acá se van a inyectar las burbujas automáticamente -->
+      <div class="comment-grid" id="commentGrid"></div>
+      
     </section>
 
     <section class="block">
@@ -461,29 +491,57 @@ function render(encuesta, nacimientos, comentarios){
   const complementaEntry = Object.entries(reemplazaCounts).find(([k]) => stripAccents(k).includes('complementa'));
   const pctComplementa = pct(complementaEntry ? complementaEntry[1] : 0, reemplazaTotal);
 
-  // ---------- COMENTARIOS ----------
-  const textosValidos = comentarios.filter(r => (r.text || '').toString().trim().length > 0);
-  const totalComentarios = textosValidos.length;
+  // ---------- COMENTARIOS (Lógica automática) ----------
+  const textosValidos = comentarios
+    .map(r => (r.text || '').toString().trim())
+    .filter(t => t.length > 40 && t.length < 250); 
+    // Filtramos para asegurar que sean legibles y no textos infinitos.
 
-  const categorias = [
-    { label: 'Afecto coloquial / Emojis (amor, gordo, ❤️)', terms: ['amor', 'corazon', 'vida', 'gordo', 'gorda', 'hermoso', 'hermosa', 'lindo', 'linda', 'precioso', 'cosita', 'chiquito', 'bebe', 'bebé', '❤', '❤️', '😍', '🥰', '🥺'] },
-    { label: 'Asimilación parental (hijo/a, perrhijo, familia)', terms: ['hijo', 'hija', 'perrhijo', 'gathijo', 'mama', 'mamá', 'papa', 'papá', 'sobrino', 'nieto', 'hermano', 'familia', 'familiar', 'nene', 'nena'] },
-    { label: 'Preferencia moral / Reemplazo', terms: ['reemplaza', 'sustituye', 'en vez de', 'en lugar de', 'mejor que', 'prefiero a los animales', 'no traicionan'] }
-  ];
+  const totalComentarios = comentarios.filter(r => (r.text || '').toString().trim().length > 0).length;
+
+  // Palabras clave para clasificar
+  const kwEco = ['plata', 'sueldo', 'caro', 'gasto', 'alimento', 'veterinario', 'econom', 'mantener', 'costo', 'pagar'];
+  const kwAuto = ['tiempo', 'viajar', 'trabajar', 'responsabilidad', 'independencia', 'libertad', 'atar', 'rutina', 'paz'];
+  const kwAfecto = ['compañero', 'amor', 'familia', 'hijo', 'fiel', 'incondicional', 'alegría', 'cariño', 'llegar', 'casa'];
+
+  function buscarEjemplo(textos, keywords) {
+    const match = textos.find(t => keywords.some(kw => t.toLowerCase().includes(kw)));
+    return match || "Testimonio no disponible en la muestra actual.";
+  }
+
+  // Extraer un ejemplo de cada categoría sin repetir
+  const ejEco = buscarEjemplo(textosValidos, kwEco);
+  const rest1 = textosValidos.filter(t => t !== ejEco);
   
-  const catCounts = categorias.map(cat => {
-    const count = textosValidos.filter(r => {
-      const t = stripAccents(r.text); 
-      return cat.terms.some(term => t.includes(stripAccents(term)) || r.text.includes(term)); 
-    }).length;
-    return { label: cat.label, count, pct: pct(count, totalComentarios) };
-  });
+  const ejAuto = buscarEjemplo(rest1, kwAuto);
+  const rest2 = rest1.filter(t => t !== ejAuto);
+  
+  const ejAfecto1 = buscarEjemplo(rest2, kwAfecto);
+  const rest3 = rest2.filter(t => t !== ejAfecto1);
+  
+  const ejAfecto2 = buscarEjemplo(rest3, kwAfecto);
 
-  const pctAfecto = catCounts.find(c => c.label.startsWith('Afecto')).pct;
-  const pctParental = catCounts.find(c => c.label.startsWith('Asimilación')).pct;
-  const pctPreferencia = catCounts.find(c => c.label.startsWith('Preferencia')).pct;
+  // Inyectar en el HTML
+  document.getElementById('commentGrid').innerHTML = `
+    <div class="comment-bubble">
+      <span class="tag tag-eco">Barrera económica</span>
+      <div class="quote">${ejEco}</div>
+    </div>
+    <div class="comment-bubble">
+      <span class="tag tag-auto">Autonomía y tiempo</span>
+      <div class="quote">${ejAuto}</div>
+    </div>
+    <div class="comment-bubble">
+      <span class="tag tag-afecto">Refugio afectivo</span>
+      <div class="quote">${ejAfecto1}</div>
+    </div>
+    <div class="comment-bubble">
+      <span class="tag tag-afecto">Refugio afectivo</span>
+      <div class="quote">${ejAfecto2}</div>
+    </div>
+  `;
 
-  // ---------- nacimientos ----------
+  // ---------- NACIMIENTOS ----------
   const porAnio = {};
   nacimientos.forEach(r => {
     const anio = parseInt(r.anio, 10);
@@ -505,7 +563,7 @@ function render(encuesta, nacimientos, comentarios){
   addKpi(kpiStrip, totalComentarios.toLocaleString('es-AR'), 'comentarios de YouTube analizados');
   addKpi(kpiStrip, (variacion > 0 ? '+' : '') + variacion + '%', `nacimientos, ${firstYear} → ${lastYear}`);
 
-  // ---------- insights ----------
+  // ---------- INSIGHTS ----------
   document.getElementById('insight1').innerHTML =
     `Sobre <strong>${creesTotal}</strong> respuestas, un <strong>${pctCreesSi}%</strong> considera admisible que una mascota
     llegue a ocupar el lugar emocional de un vínculo humano o familiar. Sin embargo, en el plano personal directo, el
@@ -513,16 +571,13 @@ function render(encuesta, nacimientos, comentarios){
     que muestran los relevamientos globales, el animal deja de concebirse como un objeto de propiedad y asume estatus de afecto,
     pero convive junto a la red de sociabilidad humana en vez de anularla.`;
 
-  document.getElementById('insight2').innerHTML =
-    `Metodológicamente, buscar solo términos formales subestima el fenómeno. Al ampliar la métrica, vemos que el <strong>${pctAfecto}%</strong> de las interacciones utilizan expresiones coloquiales de apego ("gordo/a", "cosita") y emojis (❤️, 😍), codificando el afecto en el ecosistema digital. Un <strong>${pctParental}%</strong> avanza explícitamente hacia un léxico de asimilación parental ("hijo/a", "perrhijo"), mientras que apenas un <strong>${pctPreferencia}%</strong> plantea un reemplazo moral o preferencia directa sobre el humano ("mejor que las personas"). El animal ocupa un lugar de extrema jerarquía emocional, pero el discurso se articula desde la devoción cotidiana más que desde la sustitución de la especie.`;
-
   document.getElementById('insight3').innerHTML =
     `Los nacimientos totales registrados descendieron de <strong>${firstVal.toLocaleString('es-AR')}</strong> en
     ${firstYear} a <strong>${lastVal.toLocaleString('es-AR')}</strong> en ${lastYear}
     (caída del <strong>${variacion}%</strong>). La curva coincide en el tiempo con la consolidación de los animales como miembros del hogar.
     Sin embargo, la demografía responde a condicionantes materiales estructurales: mientras la crianza de un hijo exige una inversión económica prolongada y postergación de la autonomía individual, la mascota ofrece compañía afectiva inmediata con costos y ataduras sustancialmente menores.`;
 
-  // ---------- charts y tarjetas ----------
+  // ---------- CHARTS ----------
   new Chart(document.getElementById('chartCrees'), {
     type: 'doughnut',
     data: {
@@ -570,15 +625,6 @@ function render(encuesta, nacimientos, comentarios){
       }
     })
   });
-
-  // Generar las tarjetas para los comentarios
-  const containerCards = document.getElementById('comentariosCards');
-  containerCards.innerHTML = catCounts.map(c => `
-    <div class="stat-card-big">
-      <div class="pct">${c.pct}%</div>
-      <div class="lbl">${c.label}</div>
-    </div>
-  `).join('');
 }
 
 document.getElementById('retryBtn').addEventListener('click', init);
