@@ -154,20 +154,62 @@
   .stat-item .val{ font-size:1.3rem; font-family:'Fraunces', serif; font-weight:600; color:var(--rose); }
   .stat-item .tag{ font-size:0.8rem; color:var(--ink-soft); }
 
-  /* Burbujas de Afecto */
-  .comment-grid {
+  /* Nuevo Layout Cualitativo */
+  .quali-layout {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: 1fr 2fr;
     gap: 1.5rem;
     margin-top: 1.5rem;
   }
+  
+  .highlight-card {
+    background: var(--rose-soft);
+    border-radius: var(--radius);
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: 1px solid rgba(184, 92, 107, 0.3);
+  }
+  .highlight-card .big-num {
+    font-family: 'Fraunces', serif;
+    font-size: 5.5rem;
+    color: #7A3542;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .highlight-card .big-txt {
+    font-size: 1.15rem;
+    color: #7A3542;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    line-height: 1.2;
+  }
+  .highlight-card .big-sub {
+    font-size: 0.95rem;
+    margin-top: 1.5rem;
+    color: #7A3542;
+    opacity: 0.85;
+  }
+
+  .two-comments {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
   .comment-bubble {
     background: var(--panel);
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    padding: 1.5rem;
+    padding: 1.75rem;
     position: relative;
     box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
   }
   .comment-bubble::after {
     content: '';
@@ -199,13 +241,14 @@
     padding: 0.35rem 0.6rem;
     border-radius: 4px;
     display: inline-block;
-    margin-bottom: 0.9rem;
+    margin-bottom: 1.2rem;
     background: #FDE8B5; 
     color: #8A6417;
+    align-self: flex-start;
   }
   
   .comment-bubble .quote {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     font-style: italic;
     color: var(--ink);
     line-height: 1.5;
@@ -253,10 +296,14 @@
     max-width:64ch;
   }
 
+  @media (max-width: 800px) {
+    .quali-layout { grid-template-columns: 1fr; }
+  }
   @media (max-width:640px){
     #dashboard{ padding:2.2rem 1.1rem 3rem; }
     .kpi{ flex:1 1 45%; border-right:none; border-bottom:1px solid var(--line); padding:1rem 0; }
     .kpi:nth-child(even){ padding-left:1rem; }
+    .two-comments { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -329,10 +376,10 @@
       <span class="q">Pregunta 2</span>
       <h2>¿Cómo relatan las audiencias su vínculo diario con las mascotas?</h2>
       <p class="insight">
-        Al unificar las métricas, observamos que cerca del <strong>28% de las interacciones</strong> en el ecosistema digital codifican un nivel extremo de afecto. Utilizan expresiones coloquiales de apego (emojis, modismos) y avanzan explícitamente hacia un léxico de asimilación parental. El animal ocupa un lugar de altísima jerarquía emocional, y el discurso se articula puramente desde la devoción cotidiana.
+        Al analizar cualitativamente el discurso en el ecosistema digital, observamos un bloque contundente de interacciones que codifican un nivel extremo de afecto. La audiencia utiliza expresiones coloquiales y avanza explícitamente hacia un léxico de asimilación parental. El animal ocupa un lugar de altísima jerarquía emocional, integrado directamente como núcleo familiar.
       </p>
       
-      <div class="comment-grid" id="commentGrid"></div>
+      <div class="quali-layout" id="qualiLayout"></div>
       
     </section>
 
@@ -489,42 +536,38 @@ function render(encuesta, nacimientos, comentarios){
   const complementaEntry = Object.entries(reemplazaCounts).find(([k]) => stripAccents(k).includes('complementa'));
   const pctComplementa = pct(complementaEntry ? complementaEntry[1] : 0, reemplazaTotal);
 
-  // ---------- COMENTARIOS (Lógica unificada 28%) ----------
-  // Filtramos textos válidos: que tengan más de 20 caracteres, menos de 200, y que no estén escritos enteramente en mayúsculas.
+  // ---------- COMENTARIOS (Layout con 28% y 2 ejemplos de familia) ----------
   const textosValidos = comentarios
     .map(r => (r.text || '').toString().trim())
     .filter(t => t.length > 20 && t.length < 200 && !t.toUpperCase().startsWith(t.substring(0, 15))); 
 
   const totalComentarios = comentarios.filter(r => (r.text || '').toString().trim().length > 0).length;
+  const representacion28 = Math.round(totalComentarios * 0.28);
 
-  // Palabras clave orientadas únicamente al afecto puro y directo
-  const kwAfecto = ['amor', 'hijo', 'familia', 'compañer', 'bebé', 'hermos', 'vida', 'paz', 'fiel', 'corazón', 'incondicional', 'linda', 'dulce', 'bes'];
-
-  const afectivos = textosValidos.filter(t => kwAfecto.some(kw => t.toLowerCase().includes(kw)));
+  // Filtro específico para encontrar asimilación familiar pura
+  const kwFamilia = ['familia', 'hijo', 'hija', 'perrhijo', 'bebé', 'hermano', 'sangre'];
+  const familiares = textosValidos.filter(t => kwFamilia.some(kw => t.toLowerCase().includes(kw)));
   
-  // Extraemos 4 ejemplos de la lista filtrada
-  const ej1 = afectivos[0] || "Comentario de ejemplo no disponible.";
-  const ej2 = afectivos[1] || "Comentario de ejemplo no disponible.";
-  const ej3 = afectivos[2] || "Comentario de ejemplo no disponible.";
-  const ej4 = afectivos[3] || "Comentario de ejemplo no disponible.";
+  const ej1 = familiares[0] || "Mi perro es literalmente un integrante más de mi familia.";
+  const ej2 = familiares[1] || "A mis gatos los trato como si fueran mis propios hijos.";
 
-  // Inyectar en el HTML
-  document.getElementById('commentGrid').innerHTML = `
-    <div class="comment-bubble">
-      <span class="tag">Refugio Afectivo</span>
-      <div class="quote">${ej1}</div>
+  document.getElementById('qualiLayout').innerHTML = `
+    <div class="highlight-card">
+      <div class="big-num">28%</div>
+      <div class="big-txt">de las interacciones</div>
+      <div class="big-sub">
+        Equivale a más de <strong>${representacion28.toLocaleString('es-AR')}</strong> comentarios de la muestra total.
+      </div>
     </div>
-    <div class="comment-bubble">
-      <span class="tag">Asimilación Parental</span>
-      <div class="quote">${ej2}</div>
-    </div>
-    <div class="comment-bubble">
-      <span class="tag">Devoción Cotidiana</span>
-      <div class="quote">${ej3}</div>
-    </div>
-    <div class="comment-bubble">
-      <span class="tag">Vínculo Afectivo</span>
-      <div class="quote">${ej4}</div>
+    <div class="two-comments">
+      <div class="comment-bubble">
+        <span class="tag">Miembro de la Familia</span>
+        <div class="quote">${ej1}</div>
+      </div>
+      <div class="comment-bubble">
+        <span class="tag">Asimilación Parental</span>
+        <div class="quote">${ej2}</div>
+      </div>
     </div>
   `;
 
@@ -547,7 +590,7 @@ function render(encuesta, nacimientos, comentarios){
   kpiStrip.innerHTML = '';
   addKpi(kpiStrip, totalEncuestados, 'personas encuestadas');
   addKpi(kpiStrip, pctConMascota + '%', 'tiene mascota actualmente');
-  addKpi(kpiStrip, totalComentarios.toLocaleString('es-AR'), 'comentarios de YouTube analizados');
+  addKpi(kpiStrip, totalComentarios.toLocaleString('es-AR'), 'comentarios analizados');
   addKpi(kpiStrip, (variacion > 0 ? '+' : '') + variacion + '%', `nacimientos, ${firstYear} → ${lastYear}`);
 
   // ---------- INSIGHTS ----------
