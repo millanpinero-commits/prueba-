@@ -154,7 +154,6 @@
   .stat-item .val{ font-size:1.3rem; font-family:'Fraunces', serif; font-weight:600; color:var(--rose); }
   .stat-item .tag{ font-size:0.8rem; color:var(--ink-soft); }
 
-  /* Nuevo Layout Cualitativo */
   .quali-layout {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -193,6 +192,7 @@
     margin-top: 1.5rem;
     color: #7A3542;
     opacity: 0.85;
+    line-height: 1.4;
   }
 
   .two-comments {
@@ -536,7 +536,6 @@ function render(encuesta, nacimientos, comentarios){
   const complementaEntry = Object.entries(reemplazaCounts).find(([k]) => stripAccents(k).includes('complementa'));
   const pctComplementa = pct(complementaEntry ? complementaEntry[1] : 0, reemplazaTotal);
 
-  // ---------- COMENTARIOS (Layout con 28% y 2 ejemplos de familia) ----------
   const textosValidos = comentarios
     .map(r => (r.text || '').toString().trim())
     .filter(t => t.length > 20 && t.length < 200 && !t.toUpperCase().startsWith(t.substring(0, 15))); 
@@ -544,9 +543,9 @@ function render(encuesta, nacimientos, comentarios){
   const totalComentarios = comentarios.filter(r => (r.text || '').toString().trim().length > 0).length;
   const representacion28 = Math.round(totalComentarios * 0.28);
 
-  // Filtro específico para encontrar asimilación familiar pura
-  const kwFamilia = ['familia', 'hijo', 'hija', 'perrhijo', 'bebé', 'hermano', 'sangre'];
-  const familiares = textosValidos.filter(t => kwFamilia.some(kw => t.toLowerCase().includes(kw)));
+  // Filtro con Expresiones Regulares (Regex) para frases exactas, evitando falsos positivos
+  const regexFamilia = /\b(mi familia|nuestra familia|parte de la familia|mi hijo|mi hija|mis hijos|como un hijo|como mi hijo|perrhijo|gathijo|mi beb[eé]|nuestro hijo)\b/i;
+  const familiares = textosValidos.filter(t => regexFamilia.test(t));
   
   const ej1 = familiares[0] || "Mi perro es literalmente un integrante más de mi familia.";
   const ej2 = familiares[1] || "A mis gatos los trato como si fueran mis propios hijos.";
@@ -556,7 +555,7 @@ function render(encuesta, nacimientos, comentarios){
       <div class="big-num">28%</div>
       <div class="big-txt">de las interacciones</div>
       <div class="big-sub">
-        Equivale a más de <strong>${representacion28.toLocaleString('es-AR')}</strong> comentarios de la muestra total.
+        Equivale a más de <strong>${representacion28.toLocaleString('es-AR')}</strong> comentarios analizados en 100 videos de mascotas de YouTube.
       </div>
     </div>
     <div class="two-comments">
@@ -571,7 +570,6 @@ function render(encuesta, nacimientos, comentarios){
     </div>
   `;
 
-  // ---------- NACIMIENTOS ----------
   const porAnio = {};
   nacimientos.forEach(r => {
     const anio = parseInt(r.anio, 10);
@@ -585,7 +583,6 @@ function render(encuesta, nacimientos, comentarios){
   const firstVal = valores[0], lastVal = valores[valores.length - 1];
   const variacion = firstVal ? Math.round(((lastVal - firstVal) / firstVal) * 100) : 0;
 
-  // ---------- KPI strip ----------
   const kpiStrip = document.getElementById('kpiStrip');
   kpiStrip.innerHTML = '';
   addKpi(kpiStrip, totalEncuestados, 'personas encuestadas');
@@ -593,7 +590,6 @@ function render(encuesta, nacimientos, comentarios){
   addKpi(kpiStrip, totalComentarios.toLocaleString('es-AR'), 'comentarios analizados');
   addKpi(kpiStrip, (variacion > 0 ? '+' : '') + variacion + '%', `nacimientos, ${firstYear} → ${lastYear}`);
 
-  // ---------- INSIGHTS ----------
   document.getElementById('insight1').innerHTML =
     `Sobre <strong>${creesTotal}</strong> respuestas, un <strong>${pctCreesSi}%</strong> considera admisible que una mascota
     llegue a ocupar el lugar emocional de un vínculo humano o familiar. Sin embargo, en el plano personal directo, el
@@ -607,7 +603,6 @@ function render(encuesta, nacimientos, comentarios){
     (caída del <strong>${variacion}%</strong>). La curva coincide en el tiempo con la consolidación de los animales como miembros del hogar.
     Sin embargo, la demografía responde a condicionantes materiales estructurales: mientras la crianza de un hijo exige una inversión económica prolongada y postergación de la autonomía individual, la mascota ofrece compañía afectiva inmediata con costos y ataduras sustancialmente menores.`;
 
-  // ---------- CHARTS ----------
   new Chart(document.getElementById('chartCrees'), {
     type: 'doughnut',
     data: {
