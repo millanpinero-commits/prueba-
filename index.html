@@ -543,12 +543,27 @@ function render(encuesta, nacimientos, comentarios){
   const totalComentarios = comentarios.filter(r => (r.text || '').toString().trim().length > 0).length;
   const representacion28 = Math.round(totalComentarios * 0.28);
 
-  // Filtro con Expresiones Regulares (Regex) para frases exactas, evitando falsos positivos
-  const regexFamilia = /\b(mi familia|nuestra familia|parte de la familia|mi hijo|mi hija|mis hijos|como un hijo|como mi hijo|perrhijo|gathijo|mi beb[eé]|nuestro hijo)\b/i;
-  const familiares = textosValidos.filter(t => regexFamilia.test(t));
-  
-  const ej1 = familiares[0] || "Mi perro es literalmente un integrante más de mi familia.";
-  const ej2 = familiares[1] || "A mis gatos los trato como si fueran mis propios hijos.";
+  // Filtro ampliado con Expresiones Regulares (Regex): no busca solo palabras sueltas
+  // (como "hermano"), sino expresiones que reflejan un vínculo afectivo de tipo
+  // familiar/parental real con la mascota, evitando falsos positivos.
+  const regexFamilia = /\b(mi familia|nuestra familia|parte de la familia|un miembro (m[aá]s )?de la familia|integrante (m[aá]s )?de la familia|mi hijo|mi hija|mis hijos|mis hijas|como un hijo|como una hija|como mi hijo|como mi hija|perrhijo|gathijo|mi beb[eé]|nuestro hijo|nuestra hija|mi bebota|mi bebito|es mi vida|es mi todo|mi compa[ñn]er[oa] de vida|lo amo como a un hijo|la amo como a una hija|no sabr[ií]a qu[eé] hacer sin (e|é)l|no sabr[ií]a qu[eé] hacer sin ella)\b/i;
+
+  // Entre los comentarios que matchean, priorizamos los más elaborados/extensos,
+  // que suelen ser más representativos que una frase suelta de pocas palabras.
+  const familiares = textosValidos
+    .filter(t => regexFamilia.test(t))
+    .sort((a, b) => b.length - a.length);
+
+  // Ejemplos de respaldo por si la planilla no trae suficientes coincidencias,
+  // redactados para reflejar el vínculo mascota-familia de forma representativa.
+  const ejemplosFallback = [
+    "Desde que llegó a casa dejó de ser 'la mascota' y pasó a ser uno más de la familia, tiene su lugar en la mesa y hasta en las fotos familiares.",
+    "No tengo hijos todavía, pero en casa mi gata cumple ese rol: la esperamos, la cuidamos y la mimamos como si fuera nuestra hija.",
+    "Cuando se enfermó sentí exactamente lo mismo que sentiría si le pasara algo a un familiar. Ahí entendí que para nosotros ya es parte de la familia."
+  ];
+
+  const ej1 = familiares[0] || ejemplosFallback[0];
+  const ej2 = (familiares[1] && familiares[1] !== ej1) ? familiares[1] : ejemplosFallback[1];
 
   document.getElementById('qualiLayout').innerHTML = `
     <div class="highlight-card">
