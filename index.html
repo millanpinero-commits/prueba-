@@ -89,21 +89,62 @@
     color:var(--ink-soft);
   }
 
-  .kpi-strip{
-    margin-top:2.4rem;
-    display:flex;
-    flex-wrap:wrap;
-    border-top:1px solid var(--line);
-    border-bottom:1px solid var(--line);
+  /* ---------- Pelotas Metodológicas Animadas ---------- */
+  .methodology-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 3.5rem;
+    border-top: 1px solid var(--line);
+    padding-top: 2.5rem;
   }
-  .kpi{
-    flex:1 1 220px;
-    padding:1.3rem 1.5rem 1.3rem 0;
-    border-right:1px solid var(--line);
+  .method-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
   }
-  .kpi:last-child{ border-right:none; }
-  .kpi .num{ font-family:'Fraunces', serif; font-size:2.1rem; font-weight:600; color:var(--teal); }
-  .kpi .lbl{ color:var(--ink-soft); font-size:0.92rem; margin-top:0.2rem; }
+  .toy-ball {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--panel);
+    /* Efecto 3D de pelota de goma */
+    box-shadow: inset -12px -12px 20px rgba(0,0,0,0.15), 0 10px 15px rgba(0,0,0,0.08);
+    animation: float 3.5s ease-in-out infinite;
+  }
+  .ball-1 { background: radial-gradient(circle at 30% 30%, #43968E, var(--teal)); }
+  .ball-2 { background: radial-gradient(circle at 30% 30%, #D67283, var(--rose)); animation-delay: -1s; }
+  .ball-3 { background: radial-gradient(circle at 30% 30%, #F5C263, var(--gold)); animation-delay: -2s; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  .method-text h3 { 
+    margin: 0 0 0.3rem; 
+    font-size: 1.15rem; 
+    color: var(--ink); 
+  }
+  .method-text p { 
+    margin: 0; 
+    font-size: 0.95rem; 
+    color: var(--ink-soft); 
+    max-width: 55ch; 
+    line-height: 1.5;
+  }
+
+  @media (max-width: 640px) {
+    .method-item { flex-direction: column; text-align: center; gap: 1rem; }
+    .method-text p { max-width: 100%; }
+  }
 
   section.block{ margin-top:3.4rem; }
   .block h2{ font-size:1.5rem; max-width:32em; }
@@ -583,13 +624,32 @@ function render(encuesta, nacimientos, comentarios){
   const firstVal = valores[0], lastVal = valores[valores.length - 1];
   const variacion = firstVal ? Math.round(((lastVal - firstVal) / firstVal) * 100) : 0;
 
+// ---------- KPI strip (Pelotas Animadas) ----------
   const kpiStrip = document.getElementById('kpiStrip');
-  kpiStrip.innerHTML = '';
-  addKpi(kpiStrip, totalEncuestados, 'personas encuestadas');
-  addKpi(kpiStrip, pctConMascota + '%', 'tiene mascota actualmente');
-  addKpi(kpiStrip, totalComentarios.toLocaleString('es-AR'), 'comentarios analizados');
-  addKpi(kpiStrip, (variacion > 0 ? '+' : '') + variacion + '%', `nacimientos, ${firstYear} → ${lastYear}`);
-
+  kpiStrip.className = 'methodology-list';
+  kpiStrip.innerHTML = `
+    <div class="method-item">
+      <div class="toy-ball ball-1">${totalEncuestados}</div>
+      <div class="method-text">
+        <h3>Encuesta cuantitativa propia</h3>
+        <p>Cuestionario autoadministrado para relevar el rol afectivo de las mascotas en el entorno local. Un <strong>${pctConMascota}%</strong> de la muestra convive con animales actualmente.</p>
+      </div>
+    </div>
+    <div class="method-item">
+      <div class="toy-ball ball-2">${totalComentarios.toLocaleString('es-AR')}</div>
+      <div class="method-text">
+        <h3>Scraping de YouTube</h3>
+        <p>Extracción automatizada de comentarios en 100 videos de temática animal para analizar orgánicamente el discurso y las expresiones de afecto en la red.</p>
+      </div>
+    </div>
+    <div class="method-item">
+      <div class="toy-ball ball-3">${variacion > 0 ? '+' : ''}${variacion}%</div>
+      <div class="method-text">
+        <h3>Registros del Gobierno Nacional</h3>
+        <p>Evolución de los nacimientos a nivel país (${firstYear} → ${lastYear}). El dato surge de la base oficial consolidando los nacimientos anuales por provincia.</p>
+      </div>
+    </div>
+  `;
   document.getElementById('insight1').innerHTML =
     `Sobre <strong>${creesTotal}</strong> respuestas, un <strong>${pctCreesSi}%</strong> considera admisible que una mascota
     llegue a ocupar el lugar emocional de un vínculo humano o familiar. Sin embargo, en el plano personal directo, el
