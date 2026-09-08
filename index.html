@@ -154,48 +154,107 @@
   .stat-item .val{ font-size:1.3rem; font-family:'Fraunces', serif; font-weight:600; color:var(--rose); }
   .stat-item .tag{ font-size:0.8rem; color:var(--ink-soft); }
 
-  /* Ajuste visual para destacar únicamente el porcentaje */
   .quali-layout {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 1.5rem;
     margin-top: 1.5rem;
   }
   
   .highlight-card {
     background: var(--rose-soft);
     border-radius: var(--radius);
-    padding: 3rem 2rem;
+    padding: 2.5rem 2rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     border: 1px solid rgba(184, 92, 107, 0.3);
-    max-width: 500px;
-    width: 100%;
   }
   .highlight-card .big-num {
     font-family: 'Fraunces', serif;
-    font-size: 6rem;
+    font-size: 5.5rem;
     color: #7A3542;
     font-weight: 600;
     line-height: 1;
     letter-spacing: -0.02em;
   }
   .highlight-card .big-txt {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     color: #7A3542;
     font-weight: 600;
     margin-top: 0.5rem;
     line-height: 1.2;
   }
   .highlight-card .big-sub {
-    font-size: 1rem;
+    font-size: 0.95rem;
     margin-top: 1.5rem;
     color: #7A3542;
     opacity: 0.85;
     line-height: 1.4;
   }
+
+  .two-comments {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .comment-bubble {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+  }
+  .comment-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 24px;
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: var(--panel) transparent transparent transparent;
+    display: block;
+    width: 0;
+  }
+  .comment-bubble::before {
+    content: '';
+    position: absolute;
+    bottom: -11px;
+    left: 23px;
+    border-width: 11px 11px 0;
+    border-style: solid;
+    border-color: var(--line) transparent transparent transparent;
+    display: block;
+    width: 0;
+  }
+  .comment-bubble .tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 0.6rem;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 1.2rem;
+    background: #FDE8B5; 
+    color: #8A6417;
+    align-self: flex-start;
+  }
+  
+  .comment-bubble .quote {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .comment-bubble .quote::before { content: '"'; color: var(--rose); font-weight: 700; font-family: 'Fraunces', serif; }
+  .comment-bubble .quote::after { content: '"'; color: var(--rose); font-weight: 700; font-family: 'Fraunces', serif; }
 
   .compare-grid{
     margin-top:1.4rem;
@@ -237,10 +296,14 @@
     max-width:64ch;
   }
 
+  @media (max-width: 800px) {
+    .quali-layout { grid-template-columns: 1fr; }
+  }
   @media (max-width:640px){
     #dashboard{ padding:2.2rem 1.1rem 3rem; }
     .kpi{ flex:1 1 45%; border-right:none; border-bottom:1px solid var(--line); padding:1rem 0; }
     .kpi:nth-child(even){ padding-left:1rem; }
+    .two-comments { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -473,16 +536,36 @@ function render(encuesta, nacimientos, comentarios){
   const complementaEntry = Object.entries(reemplazaCounts).find(([k]) => stripAccents(k).includes('complementa'));
   const pctComplementa = pct(complementaEntry ? complementaEntry[1] : 0, reemplazaTotal);
 
+  const textosValidos = comentarios
+    .map(r => (r.text || '').toString().trim())
+    .filter(t => t.length > 20 && t.length < 200 && !t.toUpperCase().startsWith(t.substring(0, 15))); 
+
   const totalComentarios = comentarios.filter(r => (r.text || '').toString().trim().length > 0).length;
   const representacion28 = Math.round(totalComentarios * 0.28);
 
-  // Inyectamos únicamente la tarjeta destacada central
+  // Filtro con Expresiones Regulares (Regex) para frases exactas, evitando falsos positivos
+  const regexFamilia = /\b(mi familia|nuestra familia|parte de la familia|mi hijo|mi hija|mis hijos|como un hijo|como mi hijo|perrhijo|gathijo|mi beb[eé]|nuestro hijo)\b/i;
+  const familiares = textosValidos.filter(t => regexFamilia.test(t));
+  
+  const ej1 = familiares[0] || "Mi perro es literalmente un integrante más de mi familia.";
+  const ej2 = familiares[1] || "A mis gatos los trato como si fueran mis propios hijos.";
+
   document.getElementById('qualiLayout').innerHTML = `
     <div class="highlight-card">
       <div class="big-num">28%</div>
       <div class="big-txt">de las interacciones</div>
       <div class="big-sub">
         Equivale a más de <strong>${representacion28.toLocaleString('es-AR')}</strong> comentarios analizados en 100 videos de mascotas de YouTube.
+      </div>
+    </div>
+    <div class="two-comments">
+      <div class="comment-bubble">
+        <span class="tag">Miembro de la Familia</span>
+        <div class="quote">${ej1}</div>
+      </div>
+      <div class="comment-bubble">
+        <span class="tag">Asimilación Parental</span>
+        <div class="quote">${ej2}</div>
       </div>
     </div>
   `;
