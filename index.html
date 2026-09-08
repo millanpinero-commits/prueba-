@@ -89,7 +89,7 @@
     color:var(--ink-soft);
   }
 
-/* ---------- Pelotas y Hueso Metodológico ---------- */
+  /* ---------- Pelotas y Hueso Metodológico ---------- */
   .methodology-wrapper {
     display: grid;
     grid-template-columns: 1fr;
@@ -116,7 +116,7 @@
     gap: 2rem;
   }
   .toy-ball {
-    width: 140px; /* 40% más grandes */
+    width: 140px;
     height: 140px;
     border-radius: 50%;
     display: flex;
@@ -171,7 +171,6 @@
     animation: float 4s ease-in-out infinite;
     animation-delay: -1.5s;
   }
-  /* Círculos para simular las puntas del hueso */
   .toy-bone::before, .toy-bone::after {
     content: '';
     position: absolute;
@@ -181,14 +180,8 @@
     border-radius: 50%;
     z-index: -1;
   }
-  .toy-bone::before {
-    left: -20px; top: -12px;
-    box-shadow: 0 34px 0 var(--rose);
-  }
-  .toy-bone::after {
-    right: -20px; top: -12px;
-    box-shadow: 0 34px 0 var(--rose);
-  }
+  .toy-bone::before { left: -20px; top: -12px; box-shadow: 0 34px 0 var(--rose); }
+  .toy-bone::after { right: -20px; top: -12px; box-shadow: 0 34px 0 var(--rose); }
   .bone-wrapper h3 { font-size: 1.3rem; color: var(--ink); margin: 0 0 0.5rem; }
   .bone-wrapper p { font-size: 1rem; color: var(--ink-soft); margin: 0; line-height: 1.5; }
 
@@ -229,12 +222,7 @@
     border-radius:var(--radius);
     padding:1.2rem 1.4rem;
   }
-  .international-box h4{
-    margin:0 0 0.4rem;
-    font-size:0.95rem;
-    color:var(--teal);
-    font-weight:600;
-  }
+  .international-box h4{ margin:0 0 0.4rem; font-size:0.95rem; color:var(--teal); font-weight:600; }
   .international-box p{ margin:0; font-size:0.9rem; color:var(--ink-soft); }
   .stat-triad{ display:flex; gap:1.5rem; margin-top:0.8rem; flex-wrap:wrap; }
   .stat-item{
@@ -247,107 +235,28 @@
   .stat-item .val{ font-size:1.3rem; font-family:'Fraunces', serif; font-weight:600; color:var(--rose); }
   .stat-item .tag{ font-size:0.8rem; color:var(--ink-soft); }
 
+  /* Ajuste visual limpio para la tarjeta del porcentaje */
   .quali-layout {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 1.5rem;
+    display: flex;
+    justify-content: center;
     margin-top: 1.5rem;
   }
-  
   .highlight-card {
     background: var(--rose-soft);
     border-radius: var(--radius);
-    padding: 2.5rem 2rem;
+    padding: 3rem 2rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     border: 1px solid rgba(184, 92, 107, 0.3);
+    max-width: 450px;
+    width: 100%;
   }
-  .highlight-card .big-num {
-    font-family: 'Fraunces', serif;
-    font-size: 5.5rem;
-    color: #7A3542;
-    font-weight: 600;
-    line-height: 1;
-    letter-spacing: -0.02em;
-  }
-  .highlight-card .big-txt {
-    font-size: 1.15rem;
-    color: #7A3542;
-    font-weight: 600;
-    margin-top: 0.5rem;
-    line-height: 1.2;
-  }
-  .highlight-card .big-sub {
-    font-size: 0.95rem;
-    margin-top: 1.5rem;
-    color: #7A3542;
-    opacity: 0.85;
-    line-height: 1.4;
-  }
-
-  .two-comments {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-  }
-
-  .comment-bubble {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 1.75rem;
-    position: relative;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    display: flex;
-    flex-direction: column;
-  }
-  .comment-bubble::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 24px;
-    border-width: 10px 10px 0;
-    border-style: solid;
-    border-color: var(--panel) transparent transparent transparent;
-    display: block;
-    width: 0;
-  }
-  .comment-bubble::before {
-    content: '';
-    position: absolute;
-    bottom: -11px;
-    left: 23px;
-    border-width: 11px 11px 0;
-    border-style: solid;
-    border-color: var(--line) transparent transparent transparent;
-    display: block;
-    width: 0;
-  }
-  .comment-bubble .tag {
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.35rem 0.6rem;
-    border-radius: 4px;
-    display: inline-block;
-    margin-bottom: 1.2rem;
-    background: #FDE8B5; 
-    color: #8A6417;
-    align-self: flex-start;
-  }
-  
-  .comment-bubble .quote {
-    font-size: 1.1rem;
-    font-style: italic;
-    color: var(--ink);
-    line-height: 1.5;
-  }
-  .comment-bubble .quote::before { content: '"'; color: var(--rose); font-weight: 700; font-family: 'Fraunces', serif; }
-  .comment-bubble .quote::after { content: '"'; color: var(--rose); font-weight: 700; font-family: 'Fraunces', serif; }
+  .highlight-card .big-num { font-family: 'Fraunces', serif; font-size: 6rem; color: #7A3542; font-weight: 600; line-height: 1; letter-spacing: -0.02em; }
+  .highlight-card .big-txt { font-size: 1.25rem; color: #7A3542; font-weight: 600; margin-top: 0.5rem; line-height: 1.2; }
+  .highlight-card .big-sub { font-size: 1rem; margin-top: 1.5rem; color: #7A3542; opacity: 0.85; line-height: 1.4; }
 
   .compare-grid{
     margin-top:1.4rem;
@@ -361,42 +270,61 @@
     border-radius:var(--radius);
     padding:1.5rem;
   }
-  .compare-card h3{
-    font-size:1.15rem;
-    margin-bottom:0.8rem;
-    display:flex;
-    align-items:center;
-    gap:0.5rem;
-  }
+  .compare-card h3{ font-size:1.15rem; margin-bottom:0.8rem; display:flex; align-items:center; gap:0.5rem; }
   .compare-card.mascota h3{ color:var(--teal); }
   .compare-card.hijos h3{ color:var(--rose); }
   .compare-card ul{ list-style:none; padding:0; margin:0; }
-  .compare-card li{
-    padding:0.6rem 0;
-    border-bottom:1px solid var(--line);
-    font-size:0.92rem;
-    color:var(--ink-soft);
-  }
+  .compare-card li{ padding:0.6rem 0; border-bottom:1px solid var(--line); font-size:0.92rem; color:var(--ink-soft); }
   .compare-card li:last-child{ border-bottom:none; }
   .compare-card li strong{ color:var(--ink); }
 
+  /* ---------- Botón Flotante Adopciones Quilmes ---------- */
+  .cta-adopcion {
+    text-align: center;
+    margin: 5rem auto 2rem;
+    padding: 3rem 2rem;
+    background: #F4F5F0;
+    border: 1px dashed var(--teal);
+    border-radius: var(--radius);
+    max-width: 700px;
+  }
+  .cta-adopcion h3 { 
+    color: var(--teal); 
+    margin-bottom: 0.75rem; 
+    font-size: 1.6rem; 
+  }
+  .cta-adopcion p { 
+    color: var(--ink-soft); 
+    margin-bottom: 2.5rem; 
+    font-size: 1.1rem; 
+  }
+  .btn-wpp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #25D366; /* Verde WhatsApp */
+    color: white;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.25rem;
+    padding: 1.2rem 2.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 12px 20px rgba(37, 211, 102, 0.25);
+    /* Animación heredada */
+    animation: float 3s ease-in-out infinite;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .btn-wpp:hover { background: #1EBE57; }
+  .btn-wpp:active { transform: scale(0.95); animation: none; }
+
   footer.note{
-    margin-top:3.5rem;
+    margin-top:4.5rem;
     padding-top:1.5rem;
     border-top:1px solid var(--line);
     color:var(--ink-soft);
     font-size:0.85rem;
     max-width:64ch;
-  }
-
-  @media (max-width: 800px) {
-    .quali-layout { grid-template-columns: 1fr; }
-  }
-  @media (max-width:640px){
-    #dashboard{ padding:2.2rem 1.1rem 3rem; }
-    .kpi{ flex:1 1 45%; border-right:none; border-bottom:1px solid var(--line); padding:1rem 0; }
-    .kpi:nth-child(even){ padding-left:1rem; }
-    .two-comments { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -425,7 +353,7 @@
         de ajuste económico y búsqueda de autonomía personal.
       </p>
 
-      <div class="kpi-strip" id="kpiStrip"></div>
+      <div id="kpiStrip"></div>
     </header>
 
     <section class="block">
@@ -515,6 +443,17 @@
       </div>
     </section>
 
+    <!-- BOTÓN DE WHATSAPP AL FINAL DE LA PÁGINA -->
+    <div class="cta-adopcion">
+      <h3>¿Tenés lugar en tu familia?</h3>
+      <p>Transformá el dato estadístico en acción directa. Comunicate con la organización <strong>Adopciones Quilmes</strong> y cambiale la vida a un animal rescatado.</p>
+      
+      <!-- Enlace codificado hacia el número provisto con el mensaje personalizado -->
+      <a href="https://wa.me/5491169233782?text=Hola%20me%20interesa%20adoptar!" target="_blank" class="btn-wpp">
+        ¡Adoptar por WhatsApp!
+      </a>
+    </div>
+
     <footer class="note">
       Nota metodológica: Encuesta propia, análisis textual de comentarios en YouTube, datos de natalidad del Registro Civil/Ministerio de Salud e indicadores conceptuales de HumanePro (Pets by the Numbers). Los datos permiten mapear una transformación en las prioridades afectivas y socioeconómicas contemporáneas, sin asumir causalidades lineales directas.
     </footer>
@@ -565,13 +504,6 @@ function tally(rows, key){
 
 function sumValues(obj){ return Object.values(obj).reduce((a,b) => a+b, 0); }
 function pct(part, total){ return total ? Math.round((part/total)*100) : 0; }
-
-function addKpi(container, num, label){
-  const div = document.createElement('div');
-  div.className = 'kpi';
-  div.innerHTML = `<div class="num">${num}</div><div class="lbl">${label}</div>`;
-  container.appendChild(div);
-}
 
 function baseChartOptions(extra){
   return Object.assign({
@@ -629,19 +561,8 @@ function render(encuesta, nacimientos, comentarios){
   const complementaEntry = Object.entries(reemplazaCounts).find(([k]) => stripAccents(k).includes('complementa'));
   const pctComplementa = pct(complementaEntry ? complementaEntry[1] : 0, reemplazaTotal);
 
-  const textosValidos = comentarios
-    .map(r => (r.text || '').toString().trim())
-    .filter(t => t.length > 20 && t.length < 200 && !t.toUpperCase().startsWith(t.substring(0, 15))); 
-
   const totalComentarios = comentarios.filter(r => (r.text || '').toString().trim().length > 0).length;
   const representacion28 = Math.round(totalComentarios * 0.28);
-
-  // Filtro con Expresiones Regulares (Regex) para frases exactas, evitando falsos positivos
-  const regexFamilia = /\b(mi familia|nuestra familia|parte de la familia|mi hijo|mi hija|mis hijos|como un hijo|como mi hijo|perrhijo|gathijo|mi beb[eé]|nuestro hijo)\b/i;
-  const familiares = textosValidos.filter(t => regexFamilia.test(t));
-  
-  const ej1 = familiares[0] || "Mi perro es literalmente un integrante más de mi familia.";
-  const ej2 = familiares[1] || "A mis gatos los trato como si fueran mis propios hijos.";
 
   document.getElementById('qualiLayout').innerHTML = `
     <div class="highlight-card">
@@ -649,16 +570,6 @@ function render(encuesta, nacimientos, comentarios){
       <div class="big-txt">de las interacciones</div>
       <div class="big-sub">
         Equivale a más de <strong>${representacion28.toLocaleString('es-AR')}</strong> comentarios analizados en 100 videos de mascotas de YouTube.
-      </div>
-    </div>
-    <div class="two-comments">
-      <div class="comment-bubble">
-        <span class="tag">Miembro de la Familia</span>
-        <div class="quote">${ej1}</div>
-      </div>
-      <div class="comment-bubble">
-        <span class="tag">Asimilación Parental</span>
-        <div class="quote">${ej2}</div>
       </div>
     </div>
   `;
@@ -676,7 +587,7 @@ function render(encuesta, nacimientos, comentarios){
   const firstVal = valores[0], lastVal = valores[valores.length - 1];
   const variacion = firstVal ? Math.round(((lastVal - firstVal) / firstVal) * 100) : 0;
 
-// ---------- KPI strip (Pelotas Animadas + Hueso) ----------
+  // Inyección de Pelotas y Hueso Animado
   const kpiStrip = document.getElementById('kpiStrip');
   kpiStrip.className = 'methodology-wrapper';
   kpiStrip.innerHTML = `
@@ -710,7 +621,7 @@ function render(encuesta, nacimientos, comentarios){
       <p>De la muestra total encuestada, esta es la proporción exacta que convive actualmente con animales, confirmando la adopción masiva en los hogares.</p>
     </div>
   `;
-  
+
   document.getElementById('insight1').innerHTML =
     `Sobre <strong>${creesTotal}</strong> respuestas, un <strong>${pctCreesSi}%</strong> considera admisible que una mascota
     llegue a ocupar el lugar emocional de un vínculo humano o familiar. Sin embargo, en el plano personal directo, el
