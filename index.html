@@ -89,34 +89,45 @@
     color:var(--ink-soft);
   }
 
-  /* ---------- Pelotas Metodológicas Animadas ---------- */
+/* ---------- Pelotas y Hueso Metodológico ---------- */
+  .methodology-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4rem;
+    margin-top: 3.5rem;
+    border-top: 1px solid var(--line);
+    padding-top: 3rem;
+  }
+  @media (min-width: 900px) {
+    .methodology-wrapper {
+      grid-template-columns: 3fr 2fr;
+      align-items: center;
+    }
+  }
+
   .methodology-list {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    margin-top: 3.5rem;
-    border-top: 1px solid var(--line);
-    padding-top: 2.5rem;
+    gap: 2.5rem;
   }
   .method-item {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 2rem;
   }
   .toy-ball {
-    width: 100px;
-    height: 100px;
+    width: 140px; /* 40% más grandes */
+    height: 140px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     font-family: 'Fraunces', serif;
-    font-size: 1.6rem;
+    font-size: 2.4rem;
     font-weight: 600;
     color: var(--panel);
-    /* Efecto 3D de pelota de goma */
-    box-shadow: inset -12px -12px 20px rgba(0,0,0,0.15), 0 10px 15px rgba(0,0,0,0.08);
+    box-shadow: inset -15px -15px 25px rgba(0,0,0,0.15), 0 12px 20px rgba(0,0,0,0.08);
     animation: float 3.5s ease-in-out infinite;
   }
   .ball-1 { background: radial-gradient(circle at 30% 30%, #43968E, var(--teal)); }
@@ -128,22 +139,63 @@
     50% { transform: translateY(-12px); }
   }
 
-  .method-text h3 { 
-    margin: 0 0 0.3rem; 
-    font-size: 1.15rem; 
-    color: var(--ink); 
-  }
-  .method-text p { 
-    margin: 0; 
-    font-size: 0.95rem; 
-    color: var(--ink-soft); 
-    max-width: 55ch; 
-    line-height: 1.5;
-  }
+  .method-text h3 { margin: 0 0 0.4rem; font-size: 1.25rem; color: var(--ink); }
+  .method-text p { margin: 0; font-size: 1rem; color: var(--ink-soft); max-width: 50ch; line-height: 1.5; }
 
-  @media (max-width: 640px) {
+  /* Hueso de Juguete */
+  .bone-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2.5rem 2rem;
+    background: var(--panel);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+  }
+  .toy-bone {
+    position: relative;
+    width: 170px;
+    height: 60px;
+    background: var(--rose);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 2.6rem;
+    font-weight: 600;
+    color: white;
+    margin: 1.5rem auto 3.5rem;
+    filter: drop-shadow(0 12px 15px rgba(0,0,0,0.15));
+    animation: float 4s ease-in-out infinite;
+    animation-delay: -1.5s;
+  }
+  /* Círculos para simular las puntas del hueso */
+  .toy-bone::before, .toy-bone::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: var(--rose);
+    border-radius: 50%;
+    z-index: -1;
+  }
+  .toy-bone::before {
+    left: -20px; top: -12px;
+    box-shadow: 0 34px 0 var(--rose);
+  }
+  .toy-bone::after {
+    right: -20px; top: -12px;
+    box-shadow: 0 34px 0 var(--rose);
+  }
+  .bone-wrapper h3 { font-size: 1.3rem; color: var(--ink); margin: 0 0 0.5rem; }
+  .bone-wrapper p { font-size: 1rem; color: var(--ink-soft); margin: 0; line-height: 1.5; }
+
+  @media (max-width: 900px) {
     .method-item { flex-direction: column; text-align: center; gap: 1rem; }
     .method-text p { max-width: 100%; }
+    .toy-bone { width: 150px; font-size: 2.4rem; }
   }
 
   section.block{ margin-top:3.4rem; }
@@ -624,32 +676,41 @@ function render(encuesta, nacimientos, comentarios){
   const firstVal = valores[0], lastVal = valores[valores.length - 1];
   const variacion = firstVal ? Math.round(((lastVal - firstVal) / firstVal) * 100) : 0;
 
-// ---------- KPI strip (Pelotas Animadas) ----------
+// ---------- KPI strip (Pelotas Animadas + Hueso) ----------
   const kpiStrip = document.getElementById('kpiStrip');
-  kpiStrip.className = 'methodology-list';
+  kpiStrip.className = 'methodology-wrapper';
   kpiStrip.innerHTML = `
-    <div class="method-item">
-      <div class="toy-ball ball-1">${totalEncuestados}</div>
-      <div class="method-text">
-        <h3>Encuesta cuantitativa propia</h3>
-        <p>Cuestionario autoadministrado para relevar el rol afectivo de las mascotas en el entorno local. Un <strong>${pctConMascota}%</strong> de la muestra convive con animales actualmente.</p>
+    <div class="methodology-list">
+      <div class="method-item">
+        <div class="toy-ball ball-1">${totalEncuestados}</div>
+        <div class="method-text">
+          <h3>Encuesta cuantitativa propia</h3>
+          <p>Cuestionario autoadministrado para relevar el rol afectivo de las mascotas en el entorno local, permitiendo segmentar las respuestas.</p>
+        </div>
+      </div>
+      <div class="method-item">
+        <div class="toy-ball ball-2">${totalComentarios.toLocaleString('es-AR')}</div>
+        <div class="method-text">
+          <h3>Scraping de YouTube</h3>
+          <p>Extracción automatizada de comentarios en 100 videos de temática animal para analizar orgánicamente el discurso y las expresiones de afecto en la red.</p>
+        </div>
+      </div>
+      <div class="method-item">
+        <div class="toy-ball ball-3">${variacion > 0 ? '+' : ''}${variacion}%</div>
+        <div class="method-text">
+          <h3>Registros del Gobierno Nacional</h3>
+          <p>Evolución de los nacimientos a nivel país (${firstYear} → ${lastYear}). El dato surge de la base oficial consolidando los nacimientos anuales por provincia.</p>
+        </div>
       </div>
     </div>
-    <div class="method-item">
-      <div class="toy-ball ball-2">${totalComentarios.toLocaleString('es-AR')}</div>
-      <div class="method-text">
-        <h3>Scraping de YouTube</h3>
-        <p>Extracción automatizada de comentarios en 100 videos de temática animal para analizar orgánicamente el discurso y las expresiones de afecto en la red.</p>
-      </div>
-    </div>
-    <div class="method-item">
-      <div class="toy-ball ball-3">${variacion > 0 ? '+' : ''}${variacion}%</div>
-      <div class="method-text">
-        <h3>Registros del Gobierno Nacional</h3>
-        <p>Evolución de los nacimientos a nivel país (${firstYear} → ${lastYear}). El dato surge de la base oficial consolidando los nacimientos anuales por provincia.</p>
-      </div>
+    
+    <div class="bone-wrapper">
+      <div class="toy-bone">${pctConMascota}%</div>
+      <h3>Tienen mascota</h3>
+      <p>De la muestra total encuestada, esta es la proporción exacta que convive actualmente con animales, confirmando la adopción masiva en los hogares.</p>
     </div>
   `;
+  
   document.getElementById('insight1').innerHTML =
     `Sobre <strong>${creesTotal}</strong> respuestas, un <strong>${pctCreesSi}%</strong> considera admisible que una mascota
     llegue a ocupar el lugar emocional de un vínculo humano o familiar. Sin embargo, en el plano personal directo, el
